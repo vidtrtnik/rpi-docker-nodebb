@@ -1,0 +1,28 @@
+version: '2'
+
+volumes:
+  nodebb_db_vol:
+  nodebb_app_vol:
+
+services:
+  nodebb_app:
+    build: .
+    container_name: nodebb_app
+    ports:
+      - 4567:4567
+    volumes:
+      - nodebb_app_vol:/nodebb
+    links:
+      - nodebb_db:nodebb_db
+    depends_on:
+      - nodebb_db
+    restart: "no"
+
+  nodebb_db:
+    image: redis
+    container_name: nodebb_db
+    expose:
+      - "6379"
+    volumes:
+      - nodebb_db_vol:/data/db
+    restart: "no"
